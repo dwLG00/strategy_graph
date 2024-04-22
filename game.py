@@ -5,7 +5,7 @@ class MatrixGame:
     def __init__(self, payout_matrix, winner=):
         self.payout_matrix = payout_matrix
 
-    def play(strategy1, strategy2, n=101, winfunc=bin_more_wins):
+    def play(strategy1, strategy2, n=101, winfunc=winrate):
         outcomes = []
         for _ in range(n):
             i = strategy1.play()
@@ -13,6 +13,14 @@ class MatrixGame:
             payout = self.payout_matrix[i, j]
             outcomes.append(payout)
         return winfunc(outcomes)
+
+    def play_strategies(self, strategies, **kwargs):
+        matchup_matrix = np.zeros((len(strategies), len(strategies)))
+        for i, strategy1 in enumerate(strategies):
+            for j, strategy2 in enumerate(strategies):
+                outcome = self.play(strategy1, strategy2, **kwargs)
+                matchup_matrix[i, j] = outcome
+        return matchup_matrix
 
 class MonoStrategy:
     def __init__(self, n):
@@ -33,6 +41,9 @@ class DistributionStrategy:
                 return n
             rand -= p
         return len(distribution) - 1
+
+def winrate(l):
+    return sum([1 if outcome > 0 else 0]) / len(l)
 
 def bin_more_wins(l):
     if sum([1 if outcome > 0 else 0]) / 2 > len(l):
