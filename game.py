@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 class MatrixGame:
-    def __init__(self, payout_matrix, winner=):
+    def __init__(self, payout_matrix):
         self.payout_matrix = payout_matrix
 
     def play(strategy1, strategy2, n=101, winfunc=winrate):
